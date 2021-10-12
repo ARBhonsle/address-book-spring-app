@@ -4,6 +4,7 @@ import com.bridgelabz.addressbookspringapp.dto.AddressBookDto;
 import com.bridgelabz.addressbookspringapp.exception.AddressBookException;
 import com.bridgelabz.addressbookspringapp.model.AddressBook;
 import com.bridgelabz.addressbookspringapp.repository.AddressBookRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,9 @@ public class AddressBookServices {
     @Autowired
     AddressBookRepository addressBookRepository;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     public List<AddressBook> getAllAddressBook() {
         return addressBookRepository.findAll();
     }
@@ -25,16 +29,14 @@ public class AddressBookServices {
 
     public AddressBook add(AddressBookDto addressBookDto) {
         AddressBook addressBook = new AddressBook();
-        addressBook.setName(addressBookDto.getName());
-        addressBook.setAddress(addressBookDto.getAddress());
+        modelMapper.map(addressBookDto,addressBook);
         addressBookRepository.save(addressBook);
         return addressBook;
     }
 
     public AddressBook update(int id, AddressBookDto addressBookDto) throws AddressBookException {
         AddressBook addressBook = this.findAddressBookById(id);
-        addressBook.setName(addressBookDto.getName());
-        addressBook.setAddress(addressBookDto.getAddress());
+        modelMapper.map(addressBookDto,addressBook);
         addressBookRepository.save(addressBook);
         return addressBook;
     }
